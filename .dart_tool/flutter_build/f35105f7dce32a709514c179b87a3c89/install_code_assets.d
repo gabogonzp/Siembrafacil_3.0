@@ -1,0 +1,1 @@
+ C:\\Users\\graviel\\Desktop\\Siembrafacil3.0\\.dart_tool\\flutter_build\\f35105f7dce32a709514c179b87a3c89\\native_assets.json: 
