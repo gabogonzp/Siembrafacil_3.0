@@ -405,7 +405,7 @@ class _ProfileTabState extends State<ProfileTab> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Ayuda y Soporte'),
-        content: const Text('¿Necesitas ayuda?\n\nEmail: soporte@siembrafacil.com\nTeléfono: +57 1 234 5678\n\nTambién puedes consultar nuestras preguntas frecuentes.'),
+        content: const Text('¿Necesitas ayuda?\n\nEmail: soporte@siembrafacil.com\nTeléfono: 809-776-8732\n\nTambién puedes consultar nuestras preguntas frecuentes.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -12,7 +12,7 @@ import 'screens/main/main_screen.dart';
 import 'screens/parcels/parcel_management_screen.dart';
 import 'screens/analysis/analysis_request_screen.dart';
 import 'screens/analysis/analysis_results_screen.dart';
-import 'screens/recommendations/recommendations_screen.dart';
+import 'screens/recommendations_screen.dart';
 import 'services/auth_services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 

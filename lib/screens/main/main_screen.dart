@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siembra_facil/screens/recommendations_screen.dart';
 import 'home_tab.dart';
 import 'analysis_tab.dart';
 import 'weather_tab.dart';
@@ -30,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
       const WeatherTab(),
       const EducationTab(),
       const ProfileTab(),
+      const RecommendationsScreen(),
     ];
   }
 

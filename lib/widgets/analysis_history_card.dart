@@ -1,39 +1,41 @@
+import 'package:siembra_facil/models/history_item.dart';
 import 'package:flutter/material.dart';
 
 class AnalysisHistoryCard extends StatelessWidget {
   final String parcelName;
   final DateTime date;
-  final String status;
+  final HistoryStatus status; // Changed to the enum type
   final VoidCallback onTap;
 
   const AnalysisHistoryCard({
     super.key,
     required this.parcelName,
     required this.date,
-    required this.status,
+    required this.status, // Changed to the enum type
     required this.onTap,
   });
 
   Color _getStatusColor() {
-    switch (status.toLowerCase()) {
-      case 'óptimo':
+    switch (status) {
+      case HistoryStatus.optimal:
         return const Color(0xFF4CAF50);
-      case 'precaución':
+      case HistoryStatus.warning:
         return const Color(0xFFFF9800);
-      case 'crítico':
+      case HistoryStatus.critical:
         return const Color(0xFFF44336);
       default:
         return const Color(0xFF9E9E9E);
     }
   }
 
+  // The switch statement now checks the enum directly
   IconData _getStatusIcon() {
-    switch (status.toLowerCase()) {
-      case 'óptimo':
+    switch (status) {
+      case HistoryStatus.optimal:
         return Icons.check_circle;
-      case 'precaución':
+      case HistoryStatus.warning:
         return Icons.warning;
-      case 'crítico':
+      case HistoryStatus.critical:
         return Icons.error;
       default:
         return Icons.help;
@@ -46,6 +48,19 @@ class AnalysisHistoryCard extends StatelessWidget {
       'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  String _getDisplayStatus() {
+    switch (status) {
+      case HistoryStatus.optimal:
+        return 'Óptimo';
+      case HistoryStatus.warning:
+        return 'Precaución';
+      case HistoryStatus.critical:
+        return 'Crítico';
+      default:
+        return 'Desconocido';
+    }
   }
 
   @override
@@ -104,7 +119,7 @@ class AnalysisHistoryCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        status,
+                        _getDisplayStatus(),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,

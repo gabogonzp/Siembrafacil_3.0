@@ -5,6 +5,7 @@ import '../../widgets/quick_action_card.dart';
 import '../../widgets/analysis_history_card.dart';
 import '../../services/app_state.dart';
 import '../../services/auth_services.dart';
+import '../../models/history_item.dart'; // Make sure this path matches where your HistoryStatus enum is defined
 
 class HomeTab extends StatefulWidget {
   final VoidCallback onWeatherCardTap;
@@ -110,17 +111,17 @@ class _HomeTabState extends State<HomeTab> {
                       ),
                       const SizedBox(width: 12),
                       QuickActionCard(
-                        title: 'Mis Parcelas',
-                        icon: Icons.landscape,
+                        title: 'Recomendaciones',
+                        icon: Icons.lightbulb,
                         color: const Color(0xFF2196F3),
                         onTap: () {
-                          Navigator.pushNamed(context, '/parcels');
+                          Navigator.pushNamed(context, '/recommendations');
                         },
                       ),
                       const SizedBox(width: 12),
                       QuickActionCard(
-                        title: 'Clima',
-                        icon: Icons.cloud,
+                        title: 'Soporte',
+                        icon: Icons.question_answer_rounded,
                         color: const Color(0xFFFF9800),
                         // Use the passed callback instead of finding the ancestor state
                         onTap: widget.onWeatherCardTap,
@@ -158,7 +159,10 @@ class _HomeTabState extends State<HomeTab> {
                         child: AnalysisHistoryCard(
                           parcelName: analysis.parcelName,
                           date: analysis.date,
-                          status: analysis.overallStatus,
+                          status: HistoryStatus.values.firstWhere(
+                            (e) => e.toString().split('.').last == analysis.overallStatus,
+                            orElse: () => HistoryStatus.values.first,
+                          ),
                           onTap: () {
                             Navigator.pushNamed(context, '/analysis-results');
                           },

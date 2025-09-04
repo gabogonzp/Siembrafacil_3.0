@@ -1,8 +1,54 @@
 import 'package:flutter/material.dart';
-import '../../widgets/analysis_history_card.dart';
+import 'package:intl/intl.dart'; // Import for date formatting
+import '../../widgets/analysis_history_card.dart'; // Ensure this path is correct
+import 'package:siembra_facil/models/history_item.dart'; // You will create this file
 
-class AnalysisTab extends StatelessWidget {
+class AnalysisTab extends StatefulWidget {
   const AnalysisTab({super.key});
+
+  @override
+  State<AnalysisTab> createState() => _AnalysisTabState();
+}
+
+class _AnalysisTabState extends State<AnalysisTab> {
+  // A placeholder list to simulate fetched data
+  final List<HistoryItem> _analysisHistory = [
+    // You would typically fetch this from an API or database
+    // For now, these are placeholder items.
+    HistoryItem(
+      id: 1,
+      date: '2024-03-20',
+      time: '10:30 AM',
+      location: 'Parcela Norte',
+      status: HistoryStatus.optimal,
+      ph: 6.5,
+      humidity: 45,
+      temperature: 25,
+      trend: TrendDirection.stable,
+    ),
+    HistoryItem(
+      id: 2,
+      date: '2024-03-18',
+      time: '02:15 PM',
+      location: 'Parcela Sur',
+      status: HistoryStatus.warning,
+      ph: 5.8,
+      humidity: 50,
+      temperature: 24,
+      trend: TrendDirection.down,
+    ),
+    HistoryItem(
+      id: 3,
+      date: '2024-03-15',
+      time: '09:00 AM',
+      location: 'Parcela Este',
+      status: HistoryStatus.critical,
+      ph: 4.9,
+      humidity: 55,
+      temperature: 22,
+      trend: TrendDirection.up,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +98,7 @@ class AnalysisTab extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
+                    // Navigate to a screen to perform a new analysis
                     Navigator.pushNamed(context, '/analysis-request');
                   },
                   icon: const Icon(Icons.add, color: Colors.white),
@@ -91,17 +138,20 @@ class AnalysisTab extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               
+              // List of Analysis Cards
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: 10,
+                  itemCount: _analysisHistory.length,
                   itemBuilder: (context, index) {
+                    final analysis = _analysisHistory[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: AnalysisHistoryCard(
-                        parcelName: 'Parcela ${(index % 3) + 1}',
-                        date: DateTime.now().subtract(Duration(days: index * 3)),
-                        status: _getStatus(index),
+                        parcelName: analysis.location,
+                        // Parse the string date into a DateTime object
+                        date: DateTime.parse(analysis.date), 
+                        status: analysis.status, // Pass enum directly
                         onTap: () {
                           Navigator.pushNamed(context, '/analysis-results');
                         },
@@ -115,10 +165,5 @@ class AnalysisTab extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getStatus(int index) {
-    final statuses = ['Óptimo', 'Precaución', 'Crítico'];
-    return statuses[index % statuses.length];
   }
 }

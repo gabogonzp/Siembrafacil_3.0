@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/crop_recommendation.dart';
 import '../models/soil_improvement.dart';
+import 'package:intl/intl.dart';
 
 class RecommendationsScreen extends StatefulWidget {
   const RecommendationsScreen({super.key});
@@ -12,62 +13,79 @@ class RecommendationsScreen extends StatefulWidget {
 class _RecommendationsScreenState extends State<RecommendationsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<CropRecommendation> cropRecommendations = [
+  final String _currentDate = DateFormat('dd MMM, yyyy').format(DateTime.now());
+
+  final List<CropRecommendation>  cropRecommendations = [
     CropRecommendation(
-      name: 'Maíz',
-      icon: '🌽',
-      compatibility: 95,
-      season: 'Primavera-Verano',
-      reason: 'pH ideal y buena humedad',
-      benefits: ['Alto rendimiento esperado', 'Condiciones óptimas', 'Buen drenaje'],
-    ),
-    CropRecommendation(
-      name: 'Frijol',
-      icon: '🫘',
-      compatibility: 88,
-      season: 'Todo el año',
-      reason: 'Excelente para fijar nitrógeno',
-      benefits: ['Mejora el suelo', 'Resistente', 'Complementa otros cultivos'],
-    ),
-    CropRecommendation(
-      name: 'Tomate',
-      icon: '🍅',
-      compatibility: 82,
-      season: 'Primavera',
-      reason: 'Requiere ajuste menor de pH',
-      benefits: ['Alto valor comercial', 'Demanda constante', 'Cultivo rentable'],
-    ),
+  name: 'Papa',
+  icon: '🥔',
+  compatibility: 95,
+  season: 'Época fresca',
+  reason: 'El suelo muestra condiciones adecuadas para tubérculos, con buen balance de nutrientes y un ambiente fresco que favorece el cultivo.',
+  benefits: [
+    'Alto rendimiento esperado en suelos de clima templado',
+    'Aprovecha bien la fertilidad disponible',
+    'Producto con buena salida en el mercado local',
+  ],
+),
+
+CropRecommendation(
+  name: 'Habas o Frijol',
+  icon: '🫘',
+  compatibility: 90,
+  season: 'Todo el año',
+  reason: 'Las leguminosas ayudan a enriquecer el terreno y aportan beneficios a los cultivos que se siembren después.',
+  benefits: [
+    'Mejora la salud del suelo',
+    'Resistente a variaciones de clima y suelo',
+    'Ideal como rotación después de tubérculos',
+  ],
+),
+
+CropRecommendation(
+  name: 'Zanahoria',
+  icon: '🥕',
+  compatibility: 85,
+  season: 'Época fresca',
+  reason: 'El ambiente favorece el desarrollo de raíces de buena calidad y uniformidad.',
+  benefits: [
+    'Buen desempeño en climas frescos',
+    'Tolera condiciones variables del terreno',
+    'Alta demanda tanto en el mercado local como en exportación',
+  ],
+),
   ];
 
   final List<SoilImprovement> soilImprovements = [
-    SoilImprovement(
-      title: 'Aplicar Fertilizante Fosfórico',
-      priority: Priority.high,
-      icon: Icons.flash_on,
-      description: 'El fósforo está en nivel crítico (38%). Aplicar 50kg/ha de superfosfato.',
-      timeframe: 'Inmediato',
-      cost: 'Medio',
-      steps: [
-        'Adquirir superfosfato triple (46% P2O5)',
-        'Aplicar 50kg por hectárea',
-        'Incorporar al suelo con rastra',
-        'Regar ligeramente después de la aplicación',
-      ],
-    ),
-    SoilImprovement(
-      title: 'Fertilización Nitrogenada',
-      priority: Priority.medium,
-      icon: Icons.eco,
-      description: 'Nitrógeno en descenso (45%). Aplicar urea o sulfato de amonio.',
-      timeframe: '1-2 semanas',
-      cost: 'Bajo',
-      steps: [
-        'Aplicar 30kg/ha de urea',
-        'Dividir en 2 aplicaciones',
-        'Aplicar cerca de las raíces',
-        'Regar inmediatamente',
-      ],
-    ),
+   SoilImprovement(
+  title: 'Manejo de Salinidad Moderada',
+  priority: Priority.high,
+  icon: Icons.water_drop,
+  description: 'La CE promedio indica acumulación moderada de sales. Es necesario aplicar riegos de lavado y evitar fertilizantes salinos.',
+  timeframe: 'Inmediato',
+  cost: 'Medio',
+  steps: [
+    'Realizar riego profundo con agua de baja salinidad para lixiviar sales',
+    'Evitar fertilizantes como cloruro de potasio o nitrato de sodio',
+    'Usar fertilizantes de liberación controlada o fertirrigación precisa',
+    'Monitorear la CE del suelo cada 2-3 semanas',
+  ],
+),
+
+SoilImprovement(
+  title: 'Incorporación de Materia Orgánica',
+  priority: Priority.medium,
+  icon: Icons.grass,
+  description: 'El suelo es fértil en N, P y K, pero la materia orgánica mejora estructura, retención de humedad y reduce acumulación de sales.',
+  timeframe: '1 mes',
+  cost: 'Bajo',
+  steps: [
+    'Aplicar 2-3 toneladas por hectárea de compost o estiércol vacuno/gallinaza compostada',
+    'Incorporar con arado o rastra ligera',
+    'Mantener cobertura vegetal o mulching para conservar la humedad',
+    'Fomentar microorganismos benéficos en el suelo',
+  ],
+),
   ];
 
   @override
@@ -85,6 +103,18 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> with Sing
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Análisis de suelo',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFF2E7D32),
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -102,26 +132,28 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> with Sing
               // Header
               Container(
                 color: Colors.white,
-                padding: const EdgeInsets.all(16),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Recomendaciones Inteligentes',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF2D5016),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 65, right: 65, top: 16, bottom: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Recomendaciones',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2D5016),
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Basadas en tu análisis del 15 de Marzo, 2024',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF4CAF50),
+                      Text(
+                        'Basadas en tu análisis del $_currentDate',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF4CAF50),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               
@@ -130,9 +162,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> with Sing
                 color: Colors.white,
                 child: TabBar(
                   controller: _tabController,
-                  labelColor: const Color(0xFF2D5016),
+                  labelColor:  Color(0xFF2D5016),
                   unselectedLabelColor: Colors.grey,
-                  indicatorColor: const Color(0xFF2D5016),
+                  indicatorColor:  Color(0xFF2D5016),
                   tabs: const [
                     Tab(text: 'Qué Sembrar'),
                     Tab(text: 'Mejorar Terreno'),

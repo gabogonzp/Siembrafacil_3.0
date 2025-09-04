@@ -107,6 +107,7 @@ class _ParcelManagementScreenState extends State<ParcelManagementScreen> {
                 },
               ),
             ),
+            // The "Listo" button has been removed here.
           ],
         ),
       ),
@@ -132,24 +133,11 @@ class _ParcelManagementScreenState extends State<ParcelManagementScreen> {
         ],
       ),
       child: InkWell(
-        onTap: () async { // Made async to allow for Future.delayed
+        onTap: () {
           setState(() {
             AppState.setActiveParcel(parcel);
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${parcel.name} seleccionada como parcela activa'),
-              backgroundColor: const Color(0xFF2E7D32),
-            ),
-          );
-          
-          // Wait for 3 seconds before navigating back
-          await Future.delayed(const Duration(seconds: 3));
-          
-          // Navigate back to the previous screen, which is likely the hometab
-          if (mounted) {
-            Navigator.pop(context);
-          }
+          _showSelectionConfirmationDialog(parcel); // Call the new method
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -298,6 +286,56 @@ class _ParcelManagementScreenState extends State<ParcelManagementScreen> {
     );
   }
 
+  // ---
+
+  void _showSelectionConfirmationDialog(Parcel parcel) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevents closing by tapping outside
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.check_circle_outline,
+              color: Color(0xFF2E7D32),
+              size: 60,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              '¡Listo!',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF2E7D32),
+                  ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              '${parcel.name} ha sido seleccionada como la parcela activa.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // Navigate back to the previous screen after a short delay
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        Navigator.pop(context); // Close the dialog
+        Navigator.pop(context); // Go back to the previous screen
+      }
+    });
+  }
+
+  // ---
+
   void _showAddParcelDialog() {
     final nameController = TextEditingController();
     final locationController = TextEditingController();
@@ -378,12 +416,12 @@ class _ParcelManagementScreenState extends State<ParcelManagementScreen> {
                 final newParcel = Parcel(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
                   name: nameController.text,
-                  location: locationController.text.isEmpty 
-                      ? 'Ubicación no especificada' 
+                  location: locationController.text.isEmpty
+                      ? 'Ubicación no especificada'
                       : locationController.text,
                   cropType: selectedCropType,
-                  size: sizeController.text.isEmpty 
-                      ? 'No especificado' 
+                  size: sizeController.text.isEmpty
+                      ? 'No especificado'
                       : sizeController.text,
                 );
 
